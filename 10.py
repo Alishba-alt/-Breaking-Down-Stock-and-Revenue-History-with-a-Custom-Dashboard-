@@ -1,28 +1,55 @@
-from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import Ridge
-from sklearn.metrics import r2_score
-from sklearn.model_selection import train_test_split
-import numpy as np
+import dash
+from dash import dcc, html
+from dash.dependencies import Input, Output
+import pandas as pd
+import plotly.express as px
 
-# Example feature data (replace this with your actual data)
-X = np.array([[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]])
-y = np.array([1.1, 2.3, 3.0, 3.8, 5.1, 6.2, 7.4, 8.1, 9.5, 10.8])
+# Sample data
+data = {
+    'Year': [2018, 2019, 2020, 2021, 2022],
+    'Sedan_Sales': [8000, 8500, 7800, 8200, 8000],
+    'SUV_Sales': [7000, 7300, 7100, 7500, 7400],
+    'Truck_Sales': [5000, 5200, 4800, 5100, 5050]
+}
 
-# Split the data into training and test sets
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Create a DataFrame
+df = pd.DataFrame(data)
 
-# Perform a second-order polynomial transformation
-poly = PolynomialFeatures(degree=2)
-X_train_poly = poly.fit_transform(X_train)
-X_test_poly = poly.transform(X_test)
+# Initialize Dash app
+app = dash.Dash(__name__)
+app.title = "Vehicle Sales Analysis Dashboard"
 
-# Create and fit the Ridge regression model
-ridge = Ridge(alpha=0.1)
-ridge.fit(X_train_poly, y_train)
+# Layout of the Dash application
+app.layout = html.Div(children=[
+    html.H1("Vehicle Sales Trends Dashboard", style={'textAlign': 'center'}),
+    dcc.Dropdown(
+        id='vehicle-type-dropdown',
+        options=[
+            {'label': 'Sedan', 'value': 'Sedan_Sales'},
+            {'label': 'SUV', 'value': 'SUV_Sales'},
+            {'label': 'Truck', 'value': 'Truck_Sales'}
+        ],
+        value='Sedan_Sales',
+        style={'width': '50%', 'margin': 'auto'}
+    ),
+    dcc.Graph(id='sales-line-plot')
+])
 
-# Predict using test data
-y_pred = ridge.predict(X_test_poly)
+# Callback for interactivity
+@app.callback(
+    Output('sales-line-plot', 'figure'),
+    [Input('vehicle-type-dropdown', 'value')]
+)
+def update_graph(selected_vehicle_type):
+    fig = px.line(
+        df,
+        x='Year',
+        y=selected_vehicle_type,
+        title=f"{selected_vehicle_type.replace('_', ' ')} Trends Over Years",
+        labels={'x': 'Year', 'y': 'Sales (Units)'}
+    )
+    return fig
 
-# Calculate R²
-r2 = r2_score(y_test, y_pred)
-print(f'R² Score: {r2}')
+# Run the Dash app
+if __name__ == '__main__':
+    app.run(debug=True)

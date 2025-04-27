@@ -1,16 +1,30 @@
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
 
-# Sample DataFrame
-data = {'sqft_above': [1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000],
-        'price': [300000, 350000, 400000, 450000, 500000, 600000, 700000, 750000]}
+# Sample data
+data = {
+    'Month': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    'Sales': [5000, 4800, 5200, 6000, 7000, 7200, 6800, 6900, 6100, 6500, 6300, 5500],
+    'Seasonality': ['Winter', 'Winter', 'Spring', 'Spring', 'Spring', 'Summer', 'Summer', 'Summer', 'Fall', 'Fall', 'Fall', 'Winter']
+}
+
+# Create a DataFrame
 df = pd.DataFrame(data)
 
-# Create regression plot
-plt.figure(figsize=(8, 6))
-sns.regplot(x=df['sqft_above'], y=df['price'])
-plt.title('Correlation Between Sqft Above and Price')
-plt.xlabel('Sqft Above')
-plt.ylabel('Price')
+# Bubble sizes
+bubble_sizes = [sales / 10 for sales in df['Sales']]
+
+# Create a bubble plot
+plt.figure(figsize=(12, 8))
+plt.scatter(df['Month'], df['Sales'], s=bubble_sizes, alpha=0.6, c='blue', edgecolors='black')
+plt.title('Impact of Seasonality on Automobile Sales', fontsize=16)
+plt.xlabel('Month', fontsize=12)
+plt.ylabel('Sales (in units)', fontsize=12)
+plt.grid(True)
+
+# Annotate the plot with seasonality labels
+for i in range(len(df)):
+    plt.text(df['Month'][i], df['Sales'][i] + 200, df['Seasonality'][i], 
+             fontsize=10, ha='center', color='darkred')
+
 plt.show()

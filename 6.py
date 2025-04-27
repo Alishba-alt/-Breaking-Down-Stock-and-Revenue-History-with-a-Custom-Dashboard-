@@ -1,37 +1,27 @@
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
 
-# Sample DataFrame
-data = {'sqft_living': [1400, 1600, 1800, 2000, 2200, 2400, 2600, 2800, 3000, 3200],
-        'price': [320000, 350000, 375000, 400000, 425000, 450000, 475000, 500000, 525000, 550000]}
+# Sample data for average vehicle price and sales volume during a recession
+data = {
+    'Average_Price': [20000, 25000, 22000, 27000, 23000],
+    'Sales_Volume': [8000, 7000, 8500, 6000, 7800],
+    'Year': [2018, 2019, 2020, 2021, 2022]  # Optional for annotation
+}
+
+# Create a DataFrame
 df = pd.DataFrame(data)
 
-# Reshape sqft_living for model
-X = df[['sqft_living']]
-y = df['price']
+# Create the scatter plot
+plt.figure(figsize=(10, 6))
+plt.scatter(df['Average_Price'], df['Sales_Volume'], c='blue', edgecolors='black', alpha=0.6)
+plt.title('Correlation Between Average Vehicle Price and Sales Volume During Recession', fontsize=16)
+plt.xlabel('Average Vehicle Price (USD)', fontsize=12)
+plt.ylabel('Sales Volume (Units)', fontsize=12)
+plt.grid(True)
 
-# Fit Linear Regression Model
-model = LinearRegression()
-model.fit(X, y)
+# Optional: Annotate points with years for better clarity
+for i in range(len(df)):
+    plt.text(df['Average_Price'][i] + 200, df['Sales_Volume'][i], str(df['Year'][i]), 
+             fontsize=10, color='darkred')
 
-# Predict prices
-y_pred = model.predict(X)
-
-# Calculate R² score
-r2 = r2_score(y, y_pred)
-
-# Print the R² score
-print(f'R² Score: {r2}')
-
-# Visualize regression line
-plt.figure(figsize=(8, 6))
-plt.scatter(df['sqft_living'], df['price'], label="Actual Data")
-plt.plot(df['sqft_living'], y_pred, color='red', label="Regression Line")
-plt.xlabel("Sqft Living")
-plt.ylabel("Price")
-plt.title("Linear Regression: Sqft Living vs. Price")
-plt.legend()
 plt.show()

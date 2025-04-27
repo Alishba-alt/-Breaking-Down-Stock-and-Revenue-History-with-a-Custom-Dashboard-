@@ -1,11 +1,25 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
-# Sample DataFrame
-data = {'id': [101, 102, 103], 'Unnamed: 0': [0, 1, 2], 'Column1': [10, 20, 30], 'Column2': [1.5, 2.5, 3.5]}
+# Sample data
+data = {
+    'Year': [2018, 2019, 2020, 2021, 2022],
+    'Sedan': [8000, 8500, 7800, 8200, 8000],
+    'SUV': [7000, 7300, 7100, 7500, 7400],
+    'Truck': [5000, 5200, 4800, 5100, 5050]
+}
+
+# Create a DataFrame
 df = pd.DataFrame(data)
 
-# Drop columns and modify DataFrame in place
-df.drop(['id', 'Unnamed: 0'], axis=1, inplace=True)
+# Plot line chart for vehicle types
+plt.figure(figsize=(10, 6))
+for category in df.columns[1:]:
+    plt.plot(df['Year'], df[category], marker='o', label=category)
 
-# Get statistical summary
-print(df.describe())
+plt.title('Sales Trends by Vehicle Type', fontsize=16)
+plt.xlabel('Year', fontsize=12)
+plt.ylabel('Sales (in units)', fontsize=12)
+plt.legend(title='Vehicle Type')
+plt.grid(True)
+plt.show()

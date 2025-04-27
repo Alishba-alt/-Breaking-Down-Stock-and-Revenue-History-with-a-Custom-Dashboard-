@@ -1,26 +1,19 @@
-from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import StandardScaler, PolynomialFeatures
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
-import numpy as np
+import matplotlib.pyplot as plt
 
-# Example feature data (replace this with your actual data)
-X = np.array([[1], [2], [3], [4], [5]])
-y = np.array([2.1, 2.9, 3.7, 4.1, 5.2])
+# Sample data for advertisement expenditure during recession
+data = {
+    'Vehicle_Type': ['Sedan', 'SUV', 'Truck', 'Hatchback'],
+    'Advertisement_Expenditure': [15000, 20000, 12000, 8000]  # Replace with actual values
+}
 
-# Create the pipeline
-pipeline = Pipeline([
-    ('scaler', StandardScaler()),  # Scale the data
-    ('poly', PolynomialFeatures(degree=2)),  # Polynomial transformation
-    ('linear', LinearRegression())  # Linear regression model
-])
+# Pie chart labels and sizes
+labels = data['Vehicle_Type']
+sizes = data['Advertisement_Expenditure']
+colors = ['gold', 'lightblue', 'lightgreen', 'orange']  # Custom colors for vehicle types
+explode = [0.1 if x == 'SUV' else 0 for x in labels]  # Highlighting SUV
 
-# Fit the model
-pipeline.fit(X, y)
-
-# Predict
-y_pred = pipeline.predict(X)
-
-# Calculate R²
-r2 = r2_score(y, y_pred)
-print(f'R² Score: {r2}')
+# Create the pie chart
+plt.figure(figsize=(8, 8))
+plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90, colors=colors, explode=explode, shadow=True)
+plt.title('Advertisement Expenditure by Vehicle Type During Recession Period', fontsize=16)
+plt.show()
