@@ -1,0 +1,3 @@
+features = ["floors", "waterfront", "lat", "bedrooms", "sqft_basement", 
+            "view", "bathrooms", "sqft_living15", "sqft_above", "grade", "sqft_living"]
+target = "price"
